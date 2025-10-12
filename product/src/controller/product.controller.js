@@ -4,10 +4,10 @@ const { uploadImage } = require("../services/imagekit.service");
 
 // Create a new product
 const createProduct = async (req, res) => {
-  const { title, description, priceAmount, priceCurrency } = req.body || {};
+  const { title, description, priceAmount, priceCurrency, stock } = req.body || {};
 
   const price = { amount: priceAmount, currency: priceCurrency };
-  if (!title || !description || !priceAmount || !priceCurrency) {
+  if (!title || !description || !priceAmount || !priceCurrency || !stock) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
@@ -41,6 +41,7 @@ const createProduct = async (req, res) => {
       price,
       seller: sellerId,
       images,
+      stock,
     });
     res.status(201).json({
       message: "Product created successfully",
@@ -176,7 +177,7 @@ const updateProduct = async (req, res) => {
         message: "Not authorized to update this product",
       });
     }
-    const { title, description, priceAmount, priceCurrency } = req.body || {};
+    const { title, description, priceAmount, priceCurrency, stock } = req.body || {};
 
     // Apply only provided fields
     if (typeof title === "string") {
@@ -191,7 +192,10 @@ const updateProduct = async (req, res) => {
     if (priceCurrency !== undefined) {
       product.price.currency = priceCurrency;
     }
-
+    if (stock !== undefined) {
+      product.stock = stock;
+    }
+    
     const updated = await product.save();
     return res.status(200).json({
       message: "Product updated successfully",

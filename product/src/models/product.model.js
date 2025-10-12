@@ -30,7 +30,11 @@ const productSchema = new mongoose.Schema({
             thumbnail: String,
             id: String,
         }
-    ]
+    ],
+    stock: {
+        type: Number,
+        required: true,
+    }
 });
 
 const Product = mongoose.model('Product', productSchema);

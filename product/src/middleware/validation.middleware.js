@@ -50,7 +50,13 @@ const validateProduct = [
     .isFloat({ gt: 0 })
     .withMessage("Price amount must be a number greater than 0")
     .toFloat(),
-
+  body("stock")
+    .exists({ checkNull: true, checkFalsy: true })
+    .withMessage("Stock is required")
+    .bail()
+    .isInt({ gt: 0 })
+    .withMessage("Stock must be a positive integer")
+    .toInt(),
   body("priceCurrency")
     .exists({ checkNull: true, checkFalsy: true })
     .withMessage("Currency is required")
@@ -105,6 +111,13 @@ const validateProductUpdate = [
     .bail()
     .isIn(["USD", "INR"])
     .withMessage("Currency must be one of: USD, INR"),
+
+  body("stock")
+    .optional({ nullable: true })
+    .isInt({ gt: 0 })
+    .withMessage("Stock must be a positive integer")
+    .toInt(),
+    
   handleValidationErrors,
 ];
 
