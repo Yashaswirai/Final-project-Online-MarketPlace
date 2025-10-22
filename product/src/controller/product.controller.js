@@ -1,10 +1,11 @@
 const { mongoose } = require("mongoose");
 const productModel = require("../models/product.model");
-const { uploadImage } = require("../services/imagekit.service");
+const { uploadImage, deleteImage } = require("../services/imagekit.service");
 
 // Create a new product
 const createProduct = async (req, res) => {
-  const { title, description, priceAmount, priceCurrency, stock } = req.body || {};
+  const { title, description, priceAmount, priceCurrency, stock } =
+    req.body || {};
 
   const price = { amount: priceAmount, currency: priceCurrency };
   if (!title || !description || !priceAmount || !priceCurrency || !stock) {
@@ -177,8 +178,8 @@ const updateProduct = async (req, res) => {
         message: "Not authorized to update this product",
       });
     }
-    const { title, description, priceAmount, priceCurrency, stock } = req.body || {};
-
+    const { title, description, priceAmount, priceCurrency, stock } =
+      req.body || {};
     // Apply only provided fields
     if (typeof title === "string") {
       product.title = title;
@@ -195,7 +196,40 @@ const updateProduct = async (req, res) => {
     if (stock !== undefined) {
       product.stock = stock;
     }
-    
+    const images = [];
+    const files = Array.isArray(req.files) ? req.files : [];
+    if (files.length > 0) {
+      await Promise.all(
+        product.images.map(async (image) => {
+          try {
+            await deleteImage(image.id);
+          } catch (error) {
+            console.error("Error deleting image:", error);
+          }
+        })
+      );
+      await Promise.all(
+        files.map(async (file) => {
+          try {
+            const uploadResult = await uploadImage({
+              file: file.buffer,
+              filename: file.originalname,
+            });
+            images.push({
+              url: uploadResult.url,
+              thumbnail: uploadResult.thumbnailUrl,
+              id: uploadResult.fileId,
+            });
+          } catch (e) {
+            // If one image fails, continue with others; optionally log
+            console.error("Image upload failed:", e);
+          }
+        })
+      );
+    }
+    if (images.length > 0) {
+      product.images = [...images];
+    }
     const updated = await product.save();
     return res.status(200).json({
       message: "Product updated successfully",
@@ -231,12 +265,22 @@ const deleteProduct = async (req, res) => {
     }
     // Check ownership
     if (product.seller != req.user.id) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Not authorized to delete this product",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to delete this product",
+      });
+    }
+    // Delete associated images
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      await Promise.all(
+        product.images.map(async (image) => {
+          try {
+            await deleteImage(image.id);
+          } catch (error) {
+            console.error("Error deleting image:", error);
+          }
+        })
+      );
     }
     await productModel.findByIdAndDelete(id);
     res

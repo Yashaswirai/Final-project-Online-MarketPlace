@@ -31,16 +31,20 @@ const getCart = async (req, res) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      // No authenticated user -> treat as empty cart
-      return res.status(204).send();
+      return res.status(204).json({
+        message: "No user logged in, cart is empty",
+      });
     }
     const cart = await cartModel.findOne({ user: userId });
     if (!cart || cart.items.length === 0) {
-      return res.status(204).send({
+      return res.status(200).json({
         message: "Cart is empty",
       });
     }
-    return res.status(200).json({ cart });
+    return res.status(200).json({
+      message: "Cart retrieved",
+      cart,
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }

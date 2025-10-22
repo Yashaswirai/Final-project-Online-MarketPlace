@@ -1,5 +1,3 @@
-// Redis client. Uses real Redis in non-test environments and a lightweight
-// in-memory mock for tests to avoid touching production/shared Redis.
 const { Redis } = require("ioredis");
 
 if (process.env.NODE_ENV === "test") {

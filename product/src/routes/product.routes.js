@@ -27,6 +27,7 @@ router.get("/:id", getProductById);
 router.patch(
   "/:id",
   createAuthMiddleware(["admin", "seller"]),
+  upload.array("images", 5),
   validateProductUpdate,
   updateProduct
 );

@@ -22,6 +22,17 @@ const uploadImage = async ({ file, filename }) => {
   }
 };
 
+const deleteImage = async (fileId) => {
+  try {
+    const response = await imagekit.deleteFile(fileId);
+    return response;
+  } catch (error) {
+    console.error("Error deleting image:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   uploadImage,
+  deleteImage,
 };
