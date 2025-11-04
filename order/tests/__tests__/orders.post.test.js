@@ -130,7 +130,11 @@ describe('POST /api/orders - Create order from current cart', () => {
     expect(order).toHaveProperty('items');
     expect(Array.isArray(order.items)).toBe(true);
     expect(order).toHaveProperty('totalAmount');
-    expect(typeof order.totalAmount).toBe('number');
+    expect(typeof order.totalAmount).toBe('object');
+    expect(order.totalAmount).toHaveProperty('amount');
+    expect(typeof order.totalAmount.amount).toBe('number');
+    expect(order.totalAmount).toHaveProperty('currency');
+    expect(typeof order.totalAmount.currency).toBe('string');
     expect(order).toHaveProperty('status');
     expect(String(order.status).toUpperCase()).toBe('PENDING');
     expect(order).toHaveProperty('shippingAddress');
@@ -149,7 +153,7 @@ describe('POST /api/orders - Create order from current cart', () => {
     }
 
     // Optional: verify computed total
-    expect(order.totalAmount).toBe(2 * 10 + 1 * 20);
+    expect(order.totalAmount.amount).toBe(2 * 10 + 1 * 20);
   });
 
 

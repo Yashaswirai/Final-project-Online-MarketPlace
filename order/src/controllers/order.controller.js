@@ -62,6 +62,7 @@ const createOrder = async (req, res) => {
 
     // Build order items according to schema and compute totals
     let totalAmount = 0;
+    let currency = "USD"; // Default currency
     const orderItems = cart.items.map((item) => {
       const product = products.find(
         (p) => String(p._id) === String(item.productId)
@@ -70,6 +71,10 @@ const createOrder = async (req, res) => {
       const price = product?.price || { amount: 0, currency: "USD" };
       const lineAmount = (Number(price.amount) || 0) * qty;
       totalAmount += lineAmount;
+      // Use the currency from the first product (assuming all items use same currency)
+      if (price.currency) {
+        currency = price.currency;
+      }
       return {
         productId: item.productId,
         quantity: qty,
@@ -86,7 +91,10 @@ const createOrder = async (req, res) => {
     const order = await Order.create({
       user: user._id || user.id,
       items: orderItems,
-      totalAmount,
+      totalAmount: {
+        amount: totalAmount,
+        currency: currency,
+      },
       status: "PENDING",
       shippingAddress,
     });

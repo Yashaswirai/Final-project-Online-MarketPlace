@@ -37,7 +37,7 @@ describe('GET /api/orders/:id - Get order by id with timeline and payment summar
           price: { amount: 25, currency: 'USD' },
         },
       ],
-      totalAmount: 25,
+      totalAmount: { amount: 25, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: {
         street: '123 Main St',
@@ -89,7 +89,7 @@ describe('GET /api/orders/:id - Get order by id with timeline and payment summar
           price: { amount: 20, currency: 'USD' },
         },
       ],
-      totalAmount: 40,
+      totalAmount: { amount: 40, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: {
         street: '221B Baker Street',
@@ -137,7 +137,7 @@ describe('GET /api/orders/me - Paginated list of the customer\'s orders', () => 
           price: { amount: 15, currency: 'USD' },
         },
       ],
-      totalAmount: 15,
+      totalAmount: { amount: 15, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: {
         street: '742 Evergreen Terrace',

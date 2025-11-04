@@ -40,8 +40,15 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     totalAmount: {
-      type: Number,
-      required: true,
+      amount: {
+        type: Number,
+        required: true,
+      },
+      currency: {
+        type: String,
+        enum: ["USD", "INR"],
+        required: true,
+      },
     },
     status: {
       type: String,

@@ -42,7 +42,7 @@ describe('GET /api/orders/:id/cancel - Buyer-initiated cancel while pending', ()
       items: [
         { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } }
       ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: {
         street: 'A', city: 'B', state: 'C', pincode: '00000', country: 'US', phone: '+10000000000'
@@ -65,7 +65,7 @@ describe('GET /api/orders/:id/cancel - Buyer-initiated cancel while pending', ()
       items: [
         { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } }
       ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'SHIPPED',
       shippingAddress: {
         street: 'A', city: 'B', state: 'C', pincode: '00000', country: 'US', phone: '+10000000000'
@@ -88,7 +88,7 @@ describe('GET /api/orders/:id/cancel - Buyer-initiated cancel while pending', ()
       items: [
         { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } }
       ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: {
         street: 'A', city: 'B', state: 'C', pincode: '00000', country: 'US', phone: '+10000000000'
@@ -132,7 +132,7 @@ describe('POST /api/orders/:id/address - Attach/update delivery address prior to
     const order = await Order.create({
       user: userId,
       items: [ { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } } ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: { street: 'x', city: 'y', state: 'z', pincode: '12345', country: 'US', phone: '+10000000000' }
     });
@@ -152,7 +152,7 @@ describe('POST /api/orders/:id/address - Attach/update delivery address prior to
     const order = await Order.create({
       user: ownerId,
       items: [ { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } } ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: { street: 'x', city: 'y', state: 'z', pincode: '12345', country: 'US', phone: '+10000000000' }
     });
@@ -171,7 +171,7 @@ describe('POST /api/orders/:id/address - Attach/update delivery address prior to
     const order = await Order.create({
       user: userId,
       items: [ { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } } ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'CONFIRMED',
       shippingAddress: { street: 'x', city: 'y', state: 'z', pincode: '12345', country: 'US', phone: '+10000000000' }
     });
@@ -190,7 +190,7 @@ describe('POST /api/orders/:id/address - Attach/update delivery address prior to
     const order = await Order.create({
       user: userId,
       items: [ { productId: new mongoose.Types.ObjectId(), quantity: 1, price: { amount: 10, currency: 'USD' } } ],
-      totalAmount: 10,
+      totalAmount: { amount: 10, currency: 'USD' },
       status: 'PENDING',
       shippingAddress: { street: 'x', city: 'y', state: 'z', pincode: '12345', country: 'US', phone: '+10000000000' }
     });
