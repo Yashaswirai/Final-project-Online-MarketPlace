@@ -58,7 +58,7 @@ const createProduct = async (req, res) => {
 
 const listProducts = async (req, res) => {
   try {
-    const { skip = "0", limit = "10", minPrice, maxPrice } = req.query || {};
+    const { q = "", skip = "0", limit = "10", minPrice, maxPrice } = req.query || {};
 
     // parse and clamp pagination
     let s = parseInt(skip, 10);
@@ -92,6 +92,11 @@ const listProducts = async (req, res) => {
       query["price.amount"] = {};
       if (hasMin) query["price.amount"].$gte = min;
       if (hasMax) query["price.amount"].$lte = max;
+    }
+
+    if (q && typeof q === "string" && q.trim() !== "") {
+      const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      query.title = { $regex: escaped, $options: "i" };
     }
 
     const total = await productModel.countDocuments(query);
